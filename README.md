@@ -27,20 +27,22 @@ You have a Streamlit chatbot that you want to containerize and share with a frie
 4. **Multi-Stage Builds**: Keeps only necessary artifacts in the final image.
 
 ### Multi-Stage Build Example
-```dockerfile
-# Stage 1: Build
-FROM python:3.9-alpine as builder
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Stage 2: Final image
-FROM python:3.9-alpine
-WORKDIR /app
-COPY --from=builder /app /app
-COPY . .
-```
 
-### To Do
-1. **Use Poetry**: [YouTube Tutorial](https://www.youtube.com/watch?v=Ji2XDxmXSOM&t=50s)
-2. **Understand Multi-Stage Builds**
+#### Stage 1: Builder Stage
+
+- Base Image: Uses python:3.9-slim.
+- Working Directory: Sets the working directory to /app.
+- Copy Requirements: Copies only the requirements.txt file to leverage Docker cache.
+- Install Dependencies: Installs the dependencies listed in requirements.txt.
+
+#### Stage 2: Final Stage
+
+- Base Image: Uses python:3.9-slim.
+- Working Directory: Sets the working directory to /app.
+- Copy Dependencies: Copies the installed dependencies from the builder stage.
+- Copy Application Code: Copies the rest of the application code.
+- Expose Port: Exposes port 8501 for Streamlit.
+- Run Command: Sets the command to run the Streamlit application.
+
+
