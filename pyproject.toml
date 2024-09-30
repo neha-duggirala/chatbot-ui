@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "chatbot-ui"
+version = "0.1.0"
+description = "A streamlit application"
+authors = ["Neha Duggirala <nsm.duggirala@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.9.7 || >3.9.7,<4.0"
+altair = "5.3.0"
+streamlit = "1.34.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
