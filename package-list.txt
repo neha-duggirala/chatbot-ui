@@ -1,3 +1,0 @@
-# packages in environment at /Users/Neha.Duggirala/anaconda3/envs/bot:
-#
-# Name                    Version                   Build  Channel

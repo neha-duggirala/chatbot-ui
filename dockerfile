@@ -4,11 +4,10 @@ FROM python:3.9-slim AS builder
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy only the requirements file to leverage Docker cache
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install poetry
+COPY pyproject.toml poetry.lock ./
+RUN poetry install
+RUN poetry shell
 
 # Stage 2: Copy dependencies and application code
 FROM python:3.9-slim
@@ -17,11 +16,13 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the dependencies from the builder stage
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+COPY -from=builder /app/.venv /app/.venv
 
 # Copy the application code
 COPY . .
+# Set the environment variable to use the virtual environment
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Make port 8501 available to the world outside this container
 EXPOSE 8501
