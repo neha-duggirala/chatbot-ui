@@ -1,17 +1,20 @@
-# Stage 1: Install dependencies
+# Dockerfile example
 FROM python:3.9-slim
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy pyproject.toml and poetry.lock
+COPY pyproject.toml poetry.lock ./
 
-RUN pip install poetry
-RUN poetry install
+# Install poetry and project dependencies
+RUN pip install poetry\
+    && poetry config virtualenvs.create false\
+    && poetry install --no-interaction \
+    && poetry install --no-root
 
-# Make port 8501 available to the world outside this container
-EXPOSE 8501
+# Copy the rest of your app
+COPY . .
 
-# Run streamlit when the container launches
+# Run the application (modify as needed)
 CMD ["streamlit", "run", "main.py"]
