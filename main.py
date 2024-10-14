@@ -48,9 +48,9 @@ def get_bot_response(user_input):
     else:
         return "I'm sorry, I don't understand that. Can you please rephrase?"
 
-# Define the callback to update the chat window
+# Define the callback to update the chat window and clear the input field
 @app.callback(
-    Output('chat-window', 'children'),
+    [Output('chat-window', 'children'), Output('user-input', 'value')],
     [Input('submit-button', 'n_clicks')],
     [State('user-input', 'value'), State('chat-window', 'children')]
 )
@@ -67,8 +67,8 @@ def update_chat(n_clicks, user_input, chat_history):
             html.P(f"User: {user_input}", style={'color': '#007BFF'}),
             html.P(f"Bot: {response}", style={'color': '#000000'})
         ]))
-        return chat_history
-    return chat_history
+        return chat_history, ''
+    return chat_history, ''
 
 # Run the app
 if __name__ == "__main__":
