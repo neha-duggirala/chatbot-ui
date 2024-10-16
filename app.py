@@ -1,42 +1,18 @@
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
-import logging
-from pymongo import MongoClient
-from datetime import datetime
-from dotenv import load_dotenv
-import os
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Get MongoDB URI from environment variables
-MONGODB_URI = os.getenv('MONGODB_URI')
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
-logger = logging.getLogger()
-
-# Create a file handler
-file_handler = logging.FileHandler('user_inputs.log')
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
-
-# Add handlers to the logger
-logger.addHandler(file_handler)
+from db_handler import DBHandler
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
 
-# MongoDB connection
-client = MongoClient(MONGODB_URI)
-db = client['ds-interview-bot']
-collection = db['chat-history']
+# Initialize the DBHandler
+db_handler = DBHandler()
 
-# Function to retrieve chat history from MongoDB
+# Function to retrieve chat history from DBHandler
 def retrieve_chat_history():
     chat_history = []
-    for entry in collection.find().sort('timestamp'):
+    for entry in db_handler.retrieve_chat_history():
         chat_history.append(html.Div([
             html.P(f"User: {entry['user_input']}", style={'color': '#007BFF'}),
             html.P(f"Bot: {entry['bot_response']}", style={'color': '#000000'})
@@ -84,16 +60,8 @@ def update_chat(n_clicks, user_input, chat_history):
         chat_history = []
     if n_clicks > 0 and user_input:
         response = get_bot_response(user_input)
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # Log the user input and bot response
-        logger.info(f"User Input: {user_input}")
-        logger.info(f"Bot Response: {response}")
         # Store the chat in MongoDB
-        collection.insert_one({
-            'timestamp': timestamp,
-            'user_input': user_input,
-            'bot_response': response
-        })
+        db_handler.store_chat(user_input, response)
         # Update chat history
         chat_history.append(html.Div([
             html.P(f"User: {user_input}", style={'color': '#007BFF'}),
