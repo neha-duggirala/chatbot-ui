@@ -1,9 +1,9 @@
-from dash import html
 import dash
 from dash.dependencies import Input, Output, State
 from db_handler import DBHandler
 from layout import create_layout
 from bot_response import get_bot_response
+from dash import html
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
@@ -13,7 +13,6 @@ db_handler = DBHandler()
 
 # Set the layout of the app
 app.layout = create_layout(db_handler)
-
 
 # Define the callback to update the chat window and clear the input field
 @app.callback(
@@ -30,8 +29,8 @@ def update_chat(n_clicks, user_input, chat_history):
         db_handler.store_chat(user_input, response)
         # Update chat history
         chat_history.append(html.Div([
-            html.P(f"User: {user_input}", style={'color': '#007BFF'}),
-            html.P(f"Bot: {response}", style={'color': '#000000'})
+            html.P(f"👤 {user_input}", style={'color': '#007BFF'}),
+            html.P(f"🤖 {response}", style={'color': '#000000'})
         ]))
         return chat_history, ''
     return chat_history, ''
