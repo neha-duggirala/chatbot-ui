@@ -1,4 +1,5 @@
-import logging
+from models.chat_model import Chat
+from utils.logger import configure_logger
 from pymongo import MongoClient
 from datetime import datetime
 from dotenv import load_dotenv
@@ -11,16 +12,7 @@ load_dotenv()
 MONGODB_URI = os.getenv('MONGODB_URI')
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
-logger = logging.getLogger()
-
-# Create a file handler
-file_handler = logging.FileHandler('user_inputs.log')
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
-
-# Add handlers to the logger
-logger.addHandler(file_handler)
+logger = configure_logger('user_inputs.log')
 
 class DBHandler:
     def __init__(self):
@@ -39,11 +31,11 @@ class DBHandler:
         return chat_history
 
     def store_chat(self, user_input, bot_response):
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        chat = Chat(user_input, bot_response)
         self.collection.insert_one({
-            'timestamp': timestamp,
-            'user_input': user_input,
-            'bot_response': bot_response
+            'timestamp': chat.timestamp,
+            'user_input': chat.user_input,
+            'bot_response': chat.bot_response
         })
         logger.info(f"User Input: {user_input}")
         logger.info(f"Bot Response: {bot_response}")
