@@ -45,4 +45,12 @@ You have a Streamlit chatbot that you want to containerize and share with a frie
 - Expose Port: Exposes port 8501 for Streamlit.
 - Run Command: Sets the command to run the Streamlit application.
 
+### AWS Services used
 
+#### Amazon ECR (Elastic Container Registry):
+- Amazon ECR is similar to Docker Registry. 
+- It allows you to store, manage, and deploy Docker container images. 
+
+#### CodeBuild:
+- CodeBuild is a fully managed continuous integration service that compiles source code, runs tests, and produces software packages that are ready to deploy. 
+- We can include webhooks like what to do when we merge pr etc.
