@@ -1,0 +1,11 @@
+# Use the official Python image from the Docker Hub
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy only hello_world.py into the container at /app
+COPY hello_world.py /app
+
+# Run hello_world.py when the container launches
+CMD ["python", "hello_world.py"]
