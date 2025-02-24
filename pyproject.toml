@@ -13,8 +13,6 @@ dash = "^2.18.1"
 pymongo = "^4.10.1"
 python-dotenv = "^1.0.1"
 
-[tool.poetry.package]
-include = ["chatbot-ui"]
 
 [build-system]
 requires = ["poetry-core"]
