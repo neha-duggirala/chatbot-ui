@@ -1,0 +1,21 @@
+name: Simulation of different envs
+
+on:
+    push:
+        branches:
+            - workflow
+env:
+    ENV_NAME: dev
+
+jobs:
+    install-build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+
+        - name: print env
+          run: echo $ENV_NAME
+
+
